@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi Web Projects</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #080b10;
+    --surface: #0e1218;
+    --border: #1c2230;
+    --accent: #00e5ff;
+    --accent2: #7b61ff;
+    --text: #e8edf5;
+    --muted: #5a6478;
+    --green: #00ff9d;
+  }
+
+  html, body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Glow orb */
+  body::after {
+    content: '';
+    position: fixed;
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(123,97,255,0.15) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 80px 24px 80px;
+  }
+
+  /* Header */
+  .header {
+    margin-bottom: 64px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .header-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .header-tag::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+    display: inline-block;
+  }
+
+  h1 {
+    font-size: clamp(36px, 7vw, 64px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+
+  h1 span {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .header-desc {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  /* Section title */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Site cards */
+  .sites {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 64px;
+  }
+
+  .site-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .site-card:nth-child(1) { animation-delay: 0.1s; }
+  .site-card:nth-child(2) { animation-delay: 0.2s; }
+  .site-card:nth-child(3) { animation-delay: 0.3s; }
+
+  .site-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,229,255,0.04) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .site-card:hover {
+    border-color: rgba(0,229,255,0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,229,255,0.08);
+  }
+
+  .site-card:hover::before { opacity: 1; }
+
+  .site-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 500;
+    min-width: 28px;
+  }
+
+  .site-body { flex: 1; }
+
+  .site-name {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 6px;
+    letter-spacing: -0.3px;
+  }
+
+  .site-url {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    word-break: break-all;
+  }
+
+  .site-desc {
+    font-size: 13px;
+    color: #4a5568;
+    line-height: 1.5;
+  }
+
+  .site-arrow {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+    flex-shrink: 0;
+    font-size: 14px;
+  }
+
+  .site-card:hover .site-arrow {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,229,255,0.08);
+  }
+
+  /* Features */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 64px;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+
+  .feat-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  .feat-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    flex-shrink: 0;
+  }
+
+  /* About & Disclaimer */
+  .info-blocks {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    animation: fadeUp 0.6s 0.5s ease both;
+  }
+
+  .info-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+  }
+
+  .info-block h3 {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--accent2);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .info-block p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    animation: fadeUp 0.6s 0.6s ease both;
+  }
+
+  .status-dot {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--green);
+  }
+
+  .status-dot::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  @media (max-width: 520px) {
+    .features-grid { grid-template-columns: 1fr; }
+    .site-card { padding: 20px; }
+    .footer { flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="header-tag">web projects</div>
+    <h1>Multi <span>Web</span><br>Projects</h1>
+    <p class="header-desc">Collection of independent web tools<br>hosted across different domains.</p>
+  </div>
+
+  <div class="section-label">🌐 Active Websites</div>
+
+  <div class="sites">
+
+    <a class="site-card" href="https://home.kraxx.my.id" target="_blank" rel="noopener noreferrer">
+      <div class="site-num">01</div>
+      <div class="site-body">
+        <div class="site-name">Home Site</div>
+        <div class="site-url">home.kraxx.my.id</div>
+        <div class="site-desc">Main landing page and hub for all projects.</div>
+      </div>
+      <div class="site-arrow">↗</div>
+    </a>
+
+    <a class="site-card" href="https://owo.labibalwasi.com" target="_blank" rel="noopener noreferrer">
+      <div class="site-num">02</div>
+      <div class="site-body">
+        <div class="site-name">Owo Lab</div>
+        <div class="site-url">owo.labibalwasi.com</div>
+        <div class="site-desc">Experimental tools and utility projects.</div>
+      </div>
+      <div class="site-arrow">↗</div>
+    </a>
+
+    <a class="site-card" href="https://sticker-downloader-telegram.elitecluboffic.workers.dev" target="_blank" rel="noopener noreferrer">
+      <div class="site-num">03</div>
+      <div class="site-body">
+        <div class="site-name">Telegram Sticker Downloader</div>
+        <div class="site-url">sticker-downloader-telegram.elitecluboffic.workers.dev</div>
+        <div class="site-desc">Tool to download Telegram stickers easily and fast.</div>
+      </div>
+      <div class="site-arrow">↗</div>
+    </a>
+
+  </div>
+
+  <div class="section-label">🚀 Features</div>
+
+  <div class="features-grid">
+    <div class="feat-item"><div class="feat-dot"></div>Fast web tools</div>
+    <div class="feat-item"><div class="feat-dot"></div>Free to use</div>
+    <div class="feat-item"><div class="feat-dot"></div>No login required</div>
+    <div class="feat-item"><div class="feat-dot"></div>Lightweight projects</div>
+  </div>
+
+  <div class="section-label">📄 Info</div>
+
+  <div class="info-blocks">
+    <div class="info-block">
+      <h3>🧠 About</h3>
+      <p>This repository contains multiple independent web projects hosted on different domains for different purposes.</p>
+    </div>
+    <div class="info-block">
+      <h3>⚠️ Disclaimer</h3>
+      <p>All projects are independent and not affiliated with any third-party services they interact with.</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="status-dot">all systems operational</span>
+    <span>github.com/elitecluboffic-dot/web-network</span>
+  </div>
+
+</div>
+</body>
+</html>
